@@ -148,6 +148,8 @@ export async function loginUser(
     return flattenValidationErrors(parsed.error.flatten().fieldErrors);
   }
 
+  let destination: string;
+
   try {
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -167,11 +169,13 @@ export async function loginUser(
       return { message: LOGIN_GENERIC_ERROR };
     }
 
-    redirect(getDashboardPath(profile.role));
+    destination = getDashboardPath(profile.role);
   } catch (error: unknown) {
     console.error("loginUser setup failed", error);
     return { message: CONFIGURATION_ERROR };
   }
+
+  redirect(destination);
 }
 
 export async function logout(): Promise<void> {
