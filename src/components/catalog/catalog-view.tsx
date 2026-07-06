@@ -45,7 +45,7 @@ export function CatalogView({ sellerCode, sellerName, products, categories }: Ca
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6">
       <header className="space-y-1">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Dimarza</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Dimarsa</p>
         <h1 className="text-2xl font-semibold text-navy sm:text-3xl">Catalogo de {sellerName}</h1>
       </header>
 

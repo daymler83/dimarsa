@@ -20,7 +20,7 @@ export default function HomePage() {
           <Badge className="bg-gold text-navy hover:bg-gold-light">MVP en construccion</Badge>
           <div className="space-y-4">
             <p className="text-sm font-semibold uppercase tracking-[0.32em] text-navy-light">
-              Dimarza
+              Dimarsa
             </p>
             <h1 className="text-4xl font-semibold tracking-tight text-navy sm:text-5xl">
               Plataforma de distribucion digital para vendedores y catalogos compartibles.

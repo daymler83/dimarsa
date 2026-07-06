@@ -17,7 +17,7 @@ export function Navbar({ items }: NavbarProps) {
     <header className="border-b border-navy-light bg-navy">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="text-lg font-semibold text-white">
-          Dimarza
+          Dimarsa
         </Link>
 
         <nav className="flex flex-1 flex-wrap items-center gap-2 text-sm font-medium text-white/80 sm:gap-4">

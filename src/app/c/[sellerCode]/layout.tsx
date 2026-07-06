@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: { params: { sellerCode: strin
     select: { fullName: true },
   });
 
-  const title = seller ? `Catalogo de ${seller.fullName} | Dimarza` : "Catalogo Dimarza";
-  const description = "Compra directo desde este catalogo Dimarza y recibe tu pedido a domicilio o retira en tienda.";
+  const title = seller ? `Catalogo de ${seller.fullName} | Dimarsa` : "Catalogo Dimarsa";
+  const description = "Compra directo desde este catalogo Dimarsa y recibe tu pedido a domicilio o retira en tienda.";
 
   return {
     title,

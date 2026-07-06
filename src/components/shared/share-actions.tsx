@@ -20,7 +20,7 @@ export function ShareActions({ sellerCode }: ShareActionsProps) {
       : `/c/${sellerCode}`;
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-    `Mira mi catalogo Dimarza y compra directo aqui: ${catalogUrl}`,
+    `Mira mi catalogo Dimarsa y compra directo aqui: ${catalogUrl}`,
   )}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(catalogUrl)}`;
 

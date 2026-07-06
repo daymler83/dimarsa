@@ -34,7 +34,7 @@ export function LoginForm() {
       <CardHeader className="space-y-4">
         <Badge className="w-fit bg-cream text-navy">Acceso seguro</Badge>
         <div className="space-y-2">
-          <CardTitle className="text-3xl text-navy">Ingresa a tu cuenta Dimarza</CardTitle>
+          <CardTitle className="text-3xl text-navy">Ingresa a tu cuenta Dimarsa</CardTitle>
           <CardDescription>
             Accede a tu panel para compartir tu catalogo, revisar ventas y seguir tus comisiones.
           </CardDescription>
