@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id         String       @id @db.Uuid
+  fullName   String       @map("full_name")
+  phone      String?
+  role       String       @default("seller")
+  sellerCode String?      @unique(map: "idx_profiles_seller_code") @map("seller_code")
+  active     Boolean      @default(true)
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  orders      Order[]      @relation("SellerOrders")
+  commissions Commission[]
+
+  @@map("profiles")
+}
+
+model Category {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String    @unique
+  sortOrder Int       @default(0) @map("sort_order")
+  createdAt DateTime  @default(now()) @map("created_at")
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             String      @id @default(uuid()) @db.Uuid
+  name           String
+  slug           String      @unique
+  description    String?
+  price          Decimal     @db.Decimal(10, 2)
+  compareAtPrice Decimal?    @map("compare_at_price") @db.Decimal(10, 2)
+  imageUrl       String?     @map("image_url")
+  categoryId     String?     @map("category_id") @db.Uuid
+  stock          Int         @default(0)
+  active         Boolean     @default(true)
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+  category       Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orderItems     OrderItem[]
+
+  @@index([categoryId], map: "idx_products_category")
+  @@index([active], map: "idx_products_active")
+  @@map("products")
+}
+
+model Order {
+  id              String       @id @default(uuid()) @db.Uuid
+  orderNumber     Int          @unique @default(autoincrement()) @map("order_number")
+  customerName    String       @map("customer_name")
+  customerEmail   String       @map("customer_email")
+  customerPhone   String       @map("customer_phone")
+  shippingMethod  String       @map("shipping_method")
+  shippingAddress Json?        @map("shipping_address")
+  sellerId        String?      @map("seller_id") @db.Uuid
+  status          String       @default("pending")
+  subtotal        Decimal      @db.Decimal(10, 2)
+  shippingCost    Decimal      @default(0) @map("shipping_cost") @db.Decimal(10, 2)
+  total           Decimal      @db.Decimal(10, 2)
+  notes           String?
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  seller          Profile?     @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+  commissions     Commission[]
+
+  @@index([sellerId], map: "idx_orders_seller")
+  @@index([status], map: "idx_orders_status")
+  @@index([createdAt], map: "idx_orders_created")
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String   @id @default(uuid()) @db.Uuid
+  orderId         String   @map("order_id") @db.Uuid
+  productId       String?  @map("product_id") @db.Uuid
+  productName     String   @map("product_name")
+  productImageUrl String?  @map("product_image_url")
+  quantity        Int
+  unitPrice       Decimal  @map("unit_price") @db.Decimal(10, 2)
+  total           Decimal  @db.Decimal(10, 2)
+  createdAt       DateTime @default(now()) @map("created_at")
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId], map: "idx_order_items_order")
+  @@map("order_items")
+}
+
+model Commission {
+  id         String    @id @default(uuid()) @db.Uuid
+  orderId    String    @map("order_id") @db.Uuid
+  sellerId   String    @map("seller_id") @db.Uuid
+  amount     Decimal   @db.Decimal(10, 2)
+  percentage Decimal   @db.Decimal(5, 2)
+  status     String    @default("pending")
+  paidAt     DateTime? @map("paid_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  seller     Profile   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@index([sellerId], map: "idx_commissions_seller")
+  @@index([status], map: "idx_commissions_status")
+  @@index([orderId], map: "idx_commissions_order")
+  @@map("commissions")
+}
