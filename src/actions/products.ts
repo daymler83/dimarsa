@@ -40,7 +40,7 @@ export async function createProduct(input: ProductInput): Promise<ProductActionR
   const parsed = productSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const slug = await generateUniqueProductSlug(parsed.data.name);
@@ -76,7 +76,7 @@ export async function updateProduct(
   const parsed = productSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const existing = await prisma.product.findUnique({ where: { id }, select: { name: true, slug: true } });

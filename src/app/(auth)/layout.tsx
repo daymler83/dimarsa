@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 Convierte cada contacto en una venta trazable.
               </h1>
               <p className="mx-auto max-w-xl text-base leading-7 text-muted-foreground lg:mx-0">
-                Registra vendedores, comparte catalogos personalizados y sigue cada comision desde un solo lugar.
+                Registra vendedores, comparte catálogos personalizados y sigue cada comisión desde un solo lugar.
               </p>
             </div>
           </section>

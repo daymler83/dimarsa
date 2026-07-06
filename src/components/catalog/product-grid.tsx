@@ -18,7 +18,7 @@ export function ProductGrid({ sellerCode, products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-cream-dark p-8 text-center text-sm text-muted-foreground">
-        No hay productos disponibles en esta categoria por ahora.
+        No hay productos disponibles en esta categoría por ahora.
       </p>
     );
   }

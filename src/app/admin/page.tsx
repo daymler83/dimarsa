@@ -6,10 +6,10 @@ export default function AdminDashboardPlaceholder() {
       <div className="mx-auto max-w-4xl">
         <Card className="border-white/70 bg-white/95 shadow-brand">
           <CardHeader>
-            <CardTitle className="text-navy">Panel de administracion</CardTitle>
+            <CardTitle className="text-navy">Panel de administración</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground">
-            El dashboard admin se implementara mas adelante. El flujo de login ya contempla esta ruta.
+            El dashboard admin se implementará más adelante. El flujo de inicio de sesión ya contempla esta ruta.
           </CardContent>
         </Card>
       </div>

@@ -36,7 +36,7 @@ export function LoginForm() {
         <div className="space-y-2">
           <CardTitle className="text-3xl text-navy">Ingresa a tu cuenta Dimarsa</CardTitle>
           <CardDescription>
-            Accede a tu panel para compartir tu catalogo, revisar ventas y seguir tus comisiones.
+            Accede a tu panel para compartir tu catálogo, revisar ventas y seguir tus comisiones.
           </CardDescription>
         </div>
       </CardHeader>
@@ -67,8 +67,8 @@ export function LoginForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contrasena</Label>
-            <Input id="password" name="password" type="password" placeholder="Tu contrasena" />
+            <Label htmlFor="password">Contraseña</Label>
+            <Input id="password" name="password" type="password" placeholder="Tu contraseña" />
             <p className="text-sm text-error">{clientErrors.password?.[0] ?? state.fieldErrors?.password?.[0]}</p>
           </div>
 
@@ -82,7 +82,7 @@ export function LoginForm() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Aun no tienes cuenta?{" "}
+          ¿Aún no tienes cuenta?{" "}
           <Link className="font-medium text-navy underline-offset-4 hover:underline" href="/registro">
             Crear cuenta
           </Link>

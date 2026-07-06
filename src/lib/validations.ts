@@ -12,17 +12,17 @@ const emptyStringToUndefined = (value: unknown) => {
 
 export const registerSchema = z.object({
   fullName: z.string().trim().min(2, "Nombre requerido"),
-  email: z.string().trim().toLowerCase().email("Email invalido"),
+  email: z.string().trim().toLowerCase().email("Email inválido"),
   phone: z.preprocess(
     emptyStringToUndefined,
-    z.string().trim().min(8, "Telefono invalido").optional(),
+    z.string().trim().min(8, "Teléfono inválido").optional(),
   ),
-  password: z.string().min(6, "Minimo 6 caracteres"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
 });
 
 export const loginSchema = z.object({
-  email: z.string().trim().toLowerCase().email("Email invalido"),
-  password: z.string().min(1, "Contrasena requerida"),
+  email: z.string().trim().toLowerCase().email("Email inválido"),
+  password: z.string().min(1, "Contraseña requerida"),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
@@ -38,7 +38,7 @@ export const productSchema = z.object({
   ),
   categoryId: z.preprocess(emptyStringToUndefined, z.string().uuid().optional()),
   stock: z.coerce.number().int().min(0).default(0),
-  imageUrl: z.preprocess(emptyStringToUndefined, z.string().url("URL invalida").optional()),
+  imageUrl: z.preprocess(emptyStringToUndefined, z.string().url("URL inválida").optional()),
 });
 
 export const categorySchema = z.object({

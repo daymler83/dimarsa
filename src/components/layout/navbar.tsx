@@ -38,7 +38,7 @@ export function Navbar({ items }: NavbarProps) {
             variant="outline"
             className="h-11 border-white/30 bg-transparent px-4 text-white hover:bg-white/10 hover:text-white"
           >
-            Cerrar sesion
+            Cerrar sesión
           </Button>
         </form>
       </div>

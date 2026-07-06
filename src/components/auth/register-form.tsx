@@ -36,7 +36,7 @@ export function RegisterForm() {
         <div className="space-y-2">
           <CardTitle className="text-3xl text-navy">Empieza a vender con tu link propio</CardTitle>
           <CardDescription>
-            Crea tu cuenta para recibir tu codigo de vendedor y compartir tu catalogo desde hoy.
+            Crea tu cuenta para recibir tu código de vendedor y compartir tu catálogo desde hoy.
           </CardDescription>
         </div>
       </CardHeader>
@@ -75,14 +75,14 @@ export function RegisterForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Telefono</Label>
+            <Label htmlFor="phone">Teléfono</Label>
             <Input id="phone" name="phone" type="tel" placeholder="+56 9 1234 5678" />
             <p className="text-sm text-error">{clientErrors.phone?.[0] ?? state.fieldErrors?.phone?.[0]}</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contrasena</Label>
-            <Input id="password" name="password" type="password" placeholder="Minimo 6 caracteres" />
+            <Label htmlFor="password">Contraseña</Label>
+            <Input id="password" name="password" type="password" placeholder="Mínimo 6 caracteres" />
             <p className="text-sm text-error">{clientErrors.password?.[0] ?? state.fieldErrors?.password?.[0]}</p>
           </div>
 
@@ -102,9 +102,9 @@ export function RegisterForm() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Ya tienes cuenta?{" "}
+          ¿Ya tienes cuenta?{" "}
           <Link className="font-medium text-navy underline-offset-4 hover:underline" href="/login">
-            Inicia sesion
+            Inicia sesión
           </Link>
         </p>
       </CardContent>

@@ -5,10 +5,10 @@ export function CatalogNotFound() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
       <Card className="max-w-md border-white/70 bg-white/95 text-center shadow-brand">
         <CardHeader>
-          <CardTitle className="text-navy">Catalogo no disponible</CardTitle>
+          <CardTitle className="text-navy">Catálogo no disponible</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          Este link de vendedor no existe o ya no esta activo. Pidele a tu vendedor un link
+          Este link de vendedor no existe o ya no está activo. Pídele a tu vendedor un link
           actualizado.
         </CardContent>
       </Card>

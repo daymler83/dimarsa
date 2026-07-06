@@ -60,7 +60,7 @@ const seedUsers: SeedUser[] = [
   {
     email: "valentina.diaz@dimarza.cl",
     password: "seller123",
-    fullName: "Valentina Diaz",
+    fullName: "Valentina Díaz",
     phone: "+56 9 9876 5432",
     role: "seller",
     sellerCode: "V9L3T6",
@@ -148,9 +148,9 @@ async function main() {
 
   const products = [
     {
-      name: "Aceite 5W-30 Sintetico 1L",
+      name: "Aceite 5W-30 Sintético 1L",
       slug: "aceite-5w-30-sintetico-1l",
-      description: "Lubricante sintetico para motores bencineros y diesel livianos.",
+      description: "Lubricante sintético para motores a bencina y diésel livianos.",
       price: "18990",
       compareAtPrice: "21990",
       imageUrl: "https://images.unsplash.com/photo-1613214150384-4f3475f0da03?auto=format&fit=crop&w=1200&q=80",
@@ -158,7 +158,7 @@ async function main() {
       stock: 40,
     },
     {
-      name: "Aceite 10W-40 Semisintetico 4L",
+      name: "Aceite 10W-40 Semisintético 4L",
       slug: "aceite-10w-40-semisintetico-4l",
       description: "Formato familiar para mantenciones programadas en taller o domicilio.",
       price: "32990",
@@ -168,9 +168,9 @@ async function main() {
       stock: 24,
     },
     {
-      name: "Liquido de Frenos DOT 4",
+      name: "Líquido de Frenos DOT 4",
       slug: "liquido-de-frenos-dot-4",
-      description: "Botella de 500 ml con alto punto de ebullicion para uso urbano.",
+      description: "Botella de 500 ml con alto punto de ebullición para uso urbano.",
       price: "8990",
       compareAtPrice: null,
       imageUrl: "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=1200&q=80",
@@ -188,9 +188,9 @@ async function main() {
       stock: 18,
     },
     {
-      name: "Soporte Magnetico para Celular",
+      name: "Soporte Magnético para Celular",
       slug: "soporte-magnetico-para-celular",
-      description: "Soporte compacto para salpicadero compatible con la mayoria de smartphones.",
+      description: "Soporte compacto para salpicadero compatible con la mayoría de smartphones.",
       price: "12990",
       compareAtPrice: "15990",
       imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80",

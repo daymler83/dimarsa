@@ -37,7 +37,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-navy hover:underline"
       >
         <ArrowLeft className="h-4 w-4" />
-        Volver al catalogo
+        Volver al catálogo
       </Link>
 
       <div className="grid gap-8 sm:grid-cols-2">

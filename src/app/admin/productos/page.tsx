@@ -32,7 +32,7 @@ export default async function AdminProductsPage() {
           <div>
             <h1 className="text-2xl font-semibold text-navy">Productos</h1>
             <p className="text-sm text-muted-foreground">
-              Gestiona el catalogo que ven tus vendedores y clientes.
+              Gestiona el catálogo que ven tus vendedores y clientes.
             </p>
           </div>
           <CreateProductDialog categories={categories} />
@@ -48,7 +48,7 @@ export default async function AdminProductsPage() {
                 <TableRow>
                   <TableHead>Imagen</TableHead>
                   <TableHead>Nombre</TableHead>
-                  <TableHead>Categoria</TableHead>
+                  <TableHead>Categoría</TableHead>
                   <TableHead>Precio</TableHead>
                   <TableHead>Stock</TableHead>
                   <TableHead>Estado</TableHead>
@@ -72,7 +72,7 @@ export default async function AdminProductsPage() {
                       )}
                     </TableCell>
                     <TableCell className="font-medium text-navy">{product.name}</TableCell>
-                    <TableCell>{product.category?.name ?? "Sin categoria"}</TableCell>
+                    <TableCell>{product.category?.name ?? "Sin categoría"}</TableCell>
                     <TableCell>{formatPrice(product.price.toString())}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>

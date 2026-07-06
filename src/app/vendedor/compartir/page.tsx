@@ -13,11 +13,11 @@ const tips = [
   },
   {
     icon: SquarePen,
-    text: "Ponlo en la biografia de tu Instagram o Facebook.",
+    text: "Ponlo en la biografía de tu Instagram o Facebook.",
   },
   {
     icon: Printer,
-    text: "Imprime el codigo QR y muestralo en persona: apuntan la camara y llegan directo a tu catalogo.",
+    text: "Imprime el código QR y muéstralo en persona: apuntan la cámara y llegan directo a tu catálogo.",
   },
   {
     icon: Link2,
@@ -49,9 +49,9 @@ export default async function CompartirPage() {
       <div className="mx-auto max-w-2xl space-y-5 sm:space-y-6">
         <Card className="border-white/70 bg-white/95 shadow-brand">
           <CardHeader className="space-y-1 pb-3 sm:pb-4">
-            <CardTitle className="text-lg text-navy sm:text-xl">Comparte tu catalogo</CardTitle>
+            <CardTitle className="text-lg text-navy sm:text-xl">Comparte tu catálogo</CardTitle>
             <CardDescription className="text-xs sm:text-sm">
-              Cada compra realizada a traves de tu link se atribuye automaticamente a tu cuenta.
+              Cada compra realizada a través de tu link se atribuye automáticamente a tu cuenta.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -61,7 +61,7 @@ export default async function CompartirPage() {
 
         <Card className="border-white/70 bg-white/95 shadow-brand">
           <CardHeader className="pb-2 sm:pb-3">
-            <CardTitle className="text-lg text-navy sm:text-xl">Tips para vender mas</CardTitle>
+            <CardTitle className="text-lg text-navy sm:text-xl">Tips para vender más</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 sm:space-y-3">
             {tips.map(({ icon: Icon, text }) => (

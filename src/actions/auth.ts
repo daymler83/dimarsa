@@ -13,7 +13,7 @@ const REGISTER_GENERIC_ERROR =
   "No pudimos crear tu cuenta. Revisa tus datos e intenta nuevamente.";
 const LOGIN_GENERIC_ERROR = "Credenciales incorrectas";
 const CONFIGURATION_ERROR =
-  "La configuracion local aun no esta lista. Falta conectar Supabase y la base de datos.";
+  "La configuración local aún no está lista. Falta conectar Supabase y la base de datos.";
 
 async function generateUniqueSellerCode() {
   for (let attempt = 0; attempt < 3; attempt += 1) {

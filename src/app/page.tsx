@@ -15,10 +15,10 @@ export default function HomePage() {
               Dimarsa
             </p>
             <h1 className="text-4xl font-semibold tracking-tight text-navy sm:text-5xl">
-              Plataforma de distribucion digital para vendedores y catalogos compartibles.
+              Plataforma para distribuidores.
             </h1>
             <p className="max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-              Registrate, comparte tu catalogo personalizado y gana comisiones automaticas por
+              Regístrate, comparte tu catálogo personalizado y gana comisiones automáticas por
               cada venta atribuida a tu link.
             </p>
           </div>

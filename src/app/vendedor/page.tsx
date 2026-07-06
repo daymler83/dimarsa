@@ -9,7 +9,7 @@ export default function SellerDashboardPlaceholder() {
             <CardTitle className="text-navy">Panel de vendedor</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground">
-            El dashboard del vendedor se completara en los siguientes tasks. El flujo de auth ya redirige aqui.
+            El dashboard del vendedor se completará en los próximos pasos. El flujo de inicio de sesión ya redirige aquí.
           </CardContent>
         </Card>
       </div>

@@ -76,7 +76,7 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
 
   async function handleCreateCategory() {
     if (newCategoryName.trim().length < 2) {
-      setError("Nombre de categoria requerido");
+      setError("Nombre de categoría requerido");
       return;
     }
 
@@ -103,7 +103,7 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
     });
 
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Datos invalidos");
+      setError(parsed.error.issues[0]?.message ?? "Datos inválidos");
       return;
     }
 
@@ -154,17 +154,17 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
           id="name"
           value={values.name}
           onChange={(event) => updateField("name", event.target.value)}
-          placeholder="Aceite 5W-30 Sintetico 1L"
+          placeholder="Aceite 5W-30 Sintético 1L"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Descripcion</Label>
+        <Label htmlFor="description">Descripción</Label>
         <Input
           id="description"
           value={values.description}
           onChange={(event) => updateField("description", event.target.value)}
-          placeholder="Descripcion breve del producto"
+          placeholder="Descripción breve del producto"
         />
       </div>
 
@@ -210,10 +210,10 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
         </div>
 
         <div className="space-y-2">
-          <Label>Categoria</Label>
+          <Label>Categoría</Label>
           <Select value={values.categoryId} onValueChange={handleCategoryChange}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecciona una categoria" />
+              <SelectValue placeholder="Selecciona una categoría" />
             </SelectTrigger>
             <SelectContent>
               {categoryOptions.map((category) => (
@@ -221,7 +221,7 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
                   {category.name}
                 </SelectItem>
               ))}
-              <SelectItem value={NEW_CATEGORY_VALUE}>+ Crear nueva categoria</SelectItem>
+              <SelectItem value={NEW_CATEGORY_VALUE}>+ Crear nueva categoría</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -230,12 +230,12 @@ export function ProductForm({ categories, productId, initialValues, onSuccess }:
       {creatingCategory ? (
         <div className="flex items-end gap-2 rounded-2xl border border-cream-dark p-3">
           <div className="flex-1 space-y-2">
-            <Label htmlFor="newCategory">Nueva categoria</Label>
+            <Label htmlFor="newCategory">Nueva categoría</Label>
             <Input
               id="newCategory"
               value={newCategoryName}
               onChange={(event) => setNewCategoryName(event.target.value)}
-              placeholder="Nombre de la categoria"
+              placeholder="Nombre de la categoría"
             />
           </div>
           <Button type="button" onClick={handleCreateCategory} className="bg-navy text-white hover:bg-navy-light">

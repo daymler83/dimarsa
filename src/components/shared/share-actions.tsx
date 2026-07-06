@@ -20,7 +20,7 @@ export function ShareActions({ sellerCode }: ShareActionsProps) {
       : `/c/${sellerCode}`;
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-    `Mira mi catalogo Dimarsa y compra directo aqui: ${catalogUrl}`,
+    `Mira mi catálogo Dimarsa y compra directo aquí: ${catalogUrl}`,
   )}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(catalogUrl)}`;
 
@@ -39,7 +39,7 @@ export function ShareActions({ sellerCode }: ShareActionsProps) {
         <div className="shrink-0 rounded-2xl border border-cream-dark bg-white p-2 shadow-sm">
           <Image
             src={qrCodeUrl}
-            alt={`Codigo QR de ${catalogUrl}`}
+            alt={`Código QR de ${catalogUrl}`}
             width={168}
             height={168}
             unoptimized
