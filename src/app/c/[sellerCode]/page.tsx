@@ -22,14 +22,17 @@ export default async function SellerCatalogsPage({ params }: SellerCatalogsPageP
     orderBy: { name: "asc" },
   });
 
-  const catalogsWithCounts = await Promise.all(
-    catalogs.map(async (catalog) => ({
+  // Sequential (not Promise.all): each count fans out into more Prisma
+  // queries, and Supabase's session pooler caps concurrent connections.
+  const catalogsWithCounts = [];
+  for (const catalog of catalogs) {
+    catalogsWithCounts.push({
       slug: catalog.slug,
       name: catalog.name,
       description: catalog.description,
       productCount: await countCatalogProducts(catalog.id),
-    })),
-  );
+    });
+  }
 
   return (
     <CatalogLinksList

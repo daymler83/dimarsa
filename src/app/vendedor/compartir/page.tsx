@@ -62,7 +62,7 @@ export default async function CompartirPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/70 bg-white/95 shadow-brand">
+        <Card className="border-gold/40 bg-gradient-to-br from-gold/10 via-white to-white shadow-brand">
           <CardHeader className="pb-2 sm:pb-3">
             <CardTitle className="text-lg text-navy sm:text-xl">Tips para vender más</CardTitle>
           </CardHeader>
@@ -70,9 +70,9 @@ export default async function CompartirPage() {
             {tips.map(({ icon: Icon, text }) => (
               <div
                 key={text}
-                className="flex items-start gap-3 rounded-xl border border-cream-dark bg-cream/40 p-3 sm:gap-4 sm:p-4"
+                className="flex items-start gap-3 rounded-xl border border-gold/30 bg-white/80 p-3 sm:gap-4 sm:p-4"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-navy text-white">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-navy">
                   <Icon className="h-4 w-4" />
                 </span>
                 <p className="pt-1 text-sm leading-6 text-muted-foreground">{text}</p>

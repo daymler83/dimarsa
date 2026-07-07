@@ -30,13 +30,14 @@ const MOCK_STATS = {
   uniqueCustomers: 27,
 };
 
-const MOCK_SALES_CHART: SalesChartPoint[] = Array.from({ length: 30 }, (_, index) => {
-  const date = subDays(new Date(), 29 - index);
+const MOCK_SALES_CHART: SalesChartPoint[] = Array.from({ length: 90 }, (_, index) => {
+  const date = subDays(new Date(), 89 - index);
   const base = 18000 + Math.sin(index / 3) * 9000;
   const weekendBoost = date.getDay() === 5 || date.getDay() === 6 ? 6000 : 0;
 
   return {
     date: format(date, "d MMM", { locale: es }),
+    fullDate: format(date, "EEEE d 'de' MMMM", { locale: es }),
     revenue: Math.max(0, Math.round(base + weekendBoost)),
   };
 });
@@ -89,28 +90,32 @@ export default async function SellerDashboardPage() {
             label="Pedidos totales"
             value={MOCK_STATS.totalOrders.toString()}
             icon={ShoppingBag}
+            accent="gold"
           />
           <StatCard
             label="Ingresos totales"
             value={formatPrice(MOCK_STATS.totalRevenue)}
             icon={DollarSign}
+            accent="success"
           />
           <StatCard
             label="Comisión ganada"
             value={formatPrice(MOCK_STATS.commissionEarned)}
             icon={Percent}
             hint="10% por pedido"
+            accent="navy"
           />
           <StatCard
             label="Clientes únicos"
             value={MOCK_STATS.uniqueCustomers.toString()}
             icon={Users}
+            accent="sky"
           />
         </div>
 
         <Card className="border-white/70 bg-white/95 shadow-brand">
           <CardHeader>
-            <CardTitle className="text-navy">Ventas de los últimos 30 días</CardTitle>
+            <CardTitle className="text-navy">Ventas</CardTitle>
           </CardHeader>
           <CardContent>
             <SalesChart data={MOCK_SALES_CHART} />
@@ -122,7 +127,30 @@ export default async function SellerDashboardPage() {
             <CardTitle className="text-navy">Pedidos recientes</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
+            {/* Mobile: stacked cards instead of a horizontally-scrolling table */}
+            <div className="space-y-3 sm:hidden">
+              {MOCK_RECENT_ORDERS.map((order) => (
+                <div key={order.id} className="rounded-2xl border border-cream-dark p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-navy">#{order.id}</span>
+                    <OrderStatusBadge status={order.status} />
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">{order.customerName}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {format(order.createdAt, "d MMM", { locale: es })}
+                  </p>
+                  <div className="mt-3 flex items-center justify-between text-sm">
+                    <span className="text-navy">{formatPrice(order.total)}</span>
+                    <span className="text-muted-foreground">
+                      Comisión: <span className="font-medium text-navy">{formatPrice(order.commission)}</span>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop/tablet: table */}
+            <Table className="hidden sm:table">
               <TableHeader>
                 <TableRow>
                   <TableHead># Pedido</TableHead>

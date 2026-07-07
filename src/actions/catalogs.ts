@@ -37,8 +37,12 @@ export async function getCatalogsWithCounts() {
     },
   });
 
-  return Promise.all(
-    catalogs.map(async (catalog) => ({
+  // Sequential, not Promise.all: each catalog's count fans out into 1-2 more
+  // Prisma queries, and Supabase's session pooler caps concurrent connections
+  // at 15 -- bursting N catalogs x M queries at once can exhaust that pool.
+  const results = [];
+  for (const catalog of catalogs) {
+    results.push({
       id: catalog.id,
       name: catalog.name,
       slug: catalog.slug,
@@ -47,8 +51,10 @@ export async function getCatalogsWithCounts() {
       categoryIds: catalog.categories.map((entry) => entry.categoryId),
       productIds: catalog.products.map((entry) => entry.productId),
       productCount: await countCatalogProducts(catalog.id),
-    })),
-  );
+    });
+  }
+
+  return results;
 }
 
 export async function getActiveCatalogsForSeller() {
@@ -57,15 +63,19 @@ export async function getActiveCatalogsForSeller() {
     orderBy: { name: "asc" },
   });
 
-  return Promise.all(
-    catalogs.map(async (catalog) => ({
+  // Sequential for the same connection-pool reason as getCatalogsWithCounts.
+  const results = [];
+  for (const catalog of catalogs) {
+    results.push({
       id: catalog.id,
       name: catalog.name,
       slug: catalog.slug,
       description: catalog.description,
       productCount: await countCatalogProducts(catalog.id),
-    })),
-  );
+    });
+  }
+
+  return results;
 }
 
 export async function createCatalog(input: CatalogInput): Promise<CatalogActionResult> {
