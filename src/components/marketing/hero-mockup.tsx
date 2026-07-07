@@ -1,9 +1,26 @@
+import Image from "next/image";
 import { ShoppingBag, TrendingUp } from "lucide-react";
 
+// Mismas fotos de stock usadas en prisma/seed.ts para estos productos
+// (Smart TV Samsung, Taladro Bauker, Bicicleta Oxford) -- no son las
+// fotos reales del producto, pero coinciden con lo que ya se ve en el
+// catálogo sembrado, para que el mockup no se vea vacío.
 const previewProducts = [
-  { name: "Smart TV 55\"", price: "$399.990" },
-  { name: "Taladro Bauker", price: "$39.990" },
-  { name: "Bicicleta MTB", price: "$179.990" },
+  {
+    name: "Smart TV 55\"",
+    price: "$399.990",
+    imageUrl: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=200&q=60",
+  },
+  {
+    name: "Taladro Bauker",
+    price: "$39.990",
+    imageUrl: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=200&q=60",
+  },
+  {
+    name: "Bicicleta MTB",
+    price: "$179.990",
+    imageUrl: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=200&q=60",
+  },
 ];
 
 export function HeroMockup() {
@@ -45,7 +62,15 @@ export function HeroMockup() {
           <div className="grid grid-cols-3 gap-2">
             {previewProducts.map((product) => (
               <div key={product.name} className="rounded-xl border border-cream-dark bg-cream/40 p-2">
-                <div className="mb-2 aspect-square rounded-lg bg-cream" />
+                <div className="relative mb-2 aspect-square overflow-hidden rounded-lg bg-cream">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.name}
+                    fill
+                    sizes="120px"
+                    className="object-cover"
+                  />
+                </div>
                 <p className="truncate text-[11px] font-medium text-navy">{product.name}</p>
                 <p className="text-[11px] font-semibold text-navy">{product.price}</p>
               </div>
