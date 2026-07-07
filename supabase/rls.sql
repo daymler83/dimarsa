@@ -14,6 +14,9 @@ alter table public.products enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 alter table public.commissions enable row level security;
+alter table public.catalogs enable row level security;
+alter table public.catalog_categories enable row level security;
+alter table public.catalog_products enable row level security;
 
 drop policy if exists "Users can view own profile" on public.profiles;
 create policy "Users can view own profile"
@@ -29,3 +32,34 @@ drop policy if exists "Public can view active products" on public.products;
 create policy "Public can view active products"
   on public.products for select
   using (active = true);
+
+-- catalog-selection: active catalogs and their join rows are readable by anyone,
+-- same defense-in-depth caveat as above (Prisma bypasses RLS, this is not what
+-- makes /c/[sellerCode]/[catalogSlug] work). Writes (create/update/delete catalogs)
+-- only happen through admin server actions using Prisma/service role, never anon.
+drop policy if exists "Public can view active catalogs" on public.catalogs;
+create policy "Public can view active catalogs"
+  on public.catalogs for select
+  using (is_active = true);
+
+drop policy if exists "Public can view catalog categories" on public.catalog_categories;
+create policy "Public can view catalog categories"
+  on public.catalog_categories for select
+  using (
+    exists (
+      select 1 from public.catalogs
+      where catalogs.id = catalog_categories.catalog_id
+        and catalogs.is_active = true
+    )
+  );
+
+drop policy if exists "Public can view catalog products" on public.catalog_products;
+create policy "Public can view catalog products"
+  on public.catalog_products for select
+  using (
+    exists (
+      select 1 from public.catalogs
+      where catalogs.id = catalog_products.catalog_id
+        and catalogs.is_active = true
+    )
+  );

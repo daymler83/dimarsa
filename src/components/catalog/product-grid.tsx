@@ -11,10 +11,11 @@ type Product = {
 
 type ProductGridProps = {
   sellerCode: string;
+  catalogSlug: string;
   products: Product[];
 };
 
-export function ProductGrid({ sellerCode, products }: ProductGridProps) {
+export function ProductGrid({ sellerCode, catalogSlug, products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-cream-dark p-8 text-center text-sm text-muted-foreground">
@@ -29,6 +30,7 @@ export function ProductGrid({ sellerCode, products }: ProductGridProps) {
         <ProductCard
           key={product.id}
           sellerCode={sellerCode}
+          catalogSlug={catalogSlug}
           slug={product.slug}
           name={product.name}
           price={product.price}

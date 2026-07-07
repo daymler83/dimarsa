@@ -29,6 +29,7 @@ model Category {
   sortOrder Int       @default(0) @map("sort_order")
   createdAt DateTime  @default(now()) @map("created_at")
   products  Product[]
+  catalogs  CatalogCategory[]
 
   @@map("categories")
 }
@@ -48,10 +49,51 @@ model Product {
   updatedAt      DateTime    @updatedAt @map("updated_at")
   category       Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   orderItems     OrderItem[]
+  catalogs       CatalogProduct[]
 
   @@index([categoryId], map: "idx_products_category")
   @@index([active], map: "idx_products_active")
   @@map("products")
+}
+
+model Catalog {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String   @unique
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  categories CatalogCategory[]
+  products   CatalogProduct[]
+
+  @@index([isActive], map: "idx_catalogs_active")
+  @@map("catalogs")
+}
+
+model CatalogCategory {
+  catalogId  String @map("catalog_id") @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+
+  catalog  Catalog  @relation(fields: [catalogId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([catalogId, categoryId])
+  @@index([categoryId], map: "idx_catalog_categories_category")
+  @@map("catalog_categories")
+}
+
+model CatalogProduct {
+  catalogId String @map("catalog_id") @db.Uuid
+  productId String @map("product_id") @db.Uuid
+
+  catalog Catalog @relation(fields: [catalogId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([catalogId, productId])
+  @@index([productId], map: "idx_catalog_products_product")
+  @@map("catalog_products")
 }
 
 model Order {

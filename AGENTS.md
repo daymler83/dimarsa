@@ -20,9 +20,10 @@ Each spec has `requirements.md` (user stories + acceptance criteria in EARS), `d
 
 1. `.kiro/specs/auth-seller-system/` — Registration, login, seller codes, links, route protection
 2. `.kiro/specs/product-catalog/` — Product CRUD, categories, public catalog, product detail
-3. `.kiro/specs/shopping-cart-checkout/` — Cart (localStorage), checkout form, order creation
-4. `.kiro/specs/commission-tracking/` — Commission calculation, seller dashboard, admin payments
-5. `.kiro/specs/admin-dashboard/` — KPI overview, seller management, order management, layout
+3. `.kiro/specs/catalog-selection/` — Admin-defined catalogs (category/product groupings), seller picks one to share, replaces the "share full catalog" flow
+4. `.kiro/specs/shopping-cart-checkout/` — Cart (localStorage), checkout form, order creation
+5. `.kiro/specs/commission-tracking/` — Commission calculation, seller dashboard, admin payments
+6. `.kiro/specs/admin-dashboard/` — KPI overview, seller management, order management, layout
 
 ## Build order
 
@@ -30,9 +31,10 @@ Execute specs in this order — each builds on the previous:
 
 1. **auth-seller-system** (Tasks 1-10) — Project setup, DB schema, auth, middleware
 2. **product-catalog** (Tasks 1-8) — Products, categories, public catalog
-3. **shopping-cart-checkout** (Tasks 1-6) — Cart, checkout, order creation with commission
-4. **commission-tracking** (Tasks 1-7) — Dashboards, commission management
-5. **admin-dashboard** (Tasks 1-6) — Admin layout, overview, seller/order management, seed data
+3. **catalog-selection** (Tasks 1-8) — Catalog model, admin management, seller picks a catalog to share, nested public routes
+4. **shopping-cart-checkout** (Tasks 1-6) — Cart, checkout, order creation with commission
+5. **commission-tracking** (Tasks 1-7) — Dashboards, commission management
+6. **admin-dashboard** (Tasks 1-6) — Admin layout, overview, seller/order management, seed data
 
 ## Critical rules
 

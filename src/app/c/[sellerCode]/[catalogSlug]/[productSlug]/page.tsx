@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 
 type ProductDetailPageProps = {
-  params: { sellerCode: string; productSlug: string };
+  params: { sellerCode: string; catalogSlug: string; productSlug: string };
 };
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
@@ -19,6 +19,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   });
 
   if (!seller?.sellerCode) {
+    return <CatalogNotFound />;
+  }
+
+  const catalog = await prisma.catalog.findFirst({
+    where: { slug: params.catalogSlug, isActive: true },
+    select: { slug: true },
+  });
+
+  if (!catalog) {
     return <CatalogNotFound />;
   }
 
@@ -33,7 +42,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
       <Link
-        href={`/c/${seller.sellerCode}`}
+        href={`/c/${seller.sellerCode}/${catalog.slug}`}
         className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-navy hover:underline"
       >
         <ArrowLeft className="h-4 w-4" />

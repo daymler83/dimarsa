@@ -14,23 +14,29 @@ export type CartItem = {
 type CartState = {
   items: CartItem[];
   sellerCode: string;
+  catalogId: string | null;
 };
 
 function loadCart(sellerCode: string): CartState {
   if (typeof window === "undefined") {
-    return { items: [], sellerCode };
+    return { items: [], sellerCode, catalogId: null };
   }
 
   const stored = window.localStorage.getItem(`cart_${sellerCode}`);
 
   if (!stored) {
-    return { items: [], sellerCode };
+    return { items: [], sellerCode, catalogId: null };
   }
 
   try {
-    return JSON.parse(stored) as CartState;
+    const parsed = JSON.parse(stored) as Partial<CartState>;
+    return {
+      items: parsed.items ?? [],
+      sellerCode,
+      catalogId: parsed.catalogId ?? null,
+    };
   } catch {
-    return { items: [], sellerCode };
+    return { items: [], sellerCode, catalogId: null };
   }
 }
 
@@ -85,11 +91,17 @@ export function useCart(sellerCode: string) {
   }
 
   function clearCart() {
-    setCart({ items: [], sellerCode });
+    setCart({ items: [], sellerCode, catalogId: null });
+  }
+
+  function setCatalogId(catalogId: string) {
+    setCart((current) =>
+      current.catalogId === catalogId ? current : { ...current, catalogId },
+    );
   }
 
   const subtotal = cart.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
-  return { cart, addItem, removeItem, updateQuantity, clearCart, subtotal, itemCount };
+  return { cart, addItem, removeItem, updateQuantity, clearCart, setCatalogId, subtotal, itemCount };
 }

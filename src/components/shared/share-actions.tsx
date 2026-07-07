@@ -8,16 +8,17 @@ import { Button } from "@/components/ui/button";
 
 type ShareActionsProps = {
   sellerCode: string;
+  catalogSlug: string;
 };
 
-export function ShareActions({ sellerCode }: ShareActionsProps) {
+export function ShareActions({ sellerCode, catalogSlug }: ShareActionsProps) {
   const [copied, setCopied] = useState(false);
   const [instagramCopied, setInstagramCopied] = useState(false);
 
   const catalogUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/c/${sellerCode}`
-      : `/c/${sellerCode}`;
+      ? `${window.location.origin}/c/${sellerCode}/${catalogSlug}`
+      : `/c/${sellerCode}/${catalogSlug}`;
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
     `Mira mi catálogo Dimarsa y compra directo aquí: ${catalogUrl}`,

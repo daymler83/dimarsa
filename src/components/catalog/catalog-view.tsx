@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CategoryFilter } from "@/components/catalog/category-filter";
 import { ProductGrid } from "@/components/catalog/product-grid";
 import { FloatingCartButton } from "@/components/shared/floating-cart-button";
+import { useCart } from "@/hooks/use-cart";
 import { useSellerCode } from "@/hooks/use-seller-code";
 
 type Product = {
@@ -24,13 +25,31 @@ type Category = {
 
 type CatalogViewProps = {
   sellerCode: string;
+  catalogSlug: string;
+  catalogId: string;
   sellerName: string;
+  catalogName: string;
   products: Product[];
   categories: Category[];
 };
 
-export function CatalogView({ sellerCode, sellerName, products, categories }: CatalogViewProps) {
+export function CatalogView({
+  sellerCode,
+  catalogSlug,
+  catalogId,
+  sellerName,
+  catalogName,
+  products,
+  categories,
+}: CatalogViewProps) {
   useSellerCode(sellerCode);
+
+  const { setCatalogId } = useCart(sellerCode);
+
+  useEffect(() => {
+    setCatalogId(catalogId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalogId]);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
@@ -45,8 +64,10 @@ export function CatalogView({ sellerCode, sellerName, products, categories }: Ca
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6">
       <header className="space-y-1">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Dimarsa</p>
-        <h1 className="text-2xl font-semibold text-navy sm:text-3xl">Catálogo de {sellerName}</h1>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">
+          Catálogo de {sellerName}
+        </p>
+        <h1 className="text-2xl font-semibold text-navy sm:text-3xl">{catalogName}</h1>
       </header>
 
       <CategoryFilter
@@ -55,9 +76,9 @@ export function CatalogView({ sellerCode, sellerName, products, categories }: Ca
         onSelect={setSelectedCategoryId}
       />
 
-      <ProductGrid sellerCode={sellerCode} products={filteredProducts} />
+      <ProductGrid sellerCode={sellerCode} catalogSlug={catalogSlug} products={filteredProducts} />
 
-      <FloatingCartButton sellerCode={sellerCode} />
+      <FloatingCartButton sellerCode={sellerCode} catalogSlug={catalogSlug} />
     </div>
   );
 }

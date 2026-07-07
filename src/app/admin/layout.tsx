@@ -2,7 +2,11 @@ import type { ReactNode } from "react";
 
 import { Navbar } from "@/components/layout/navbar";
 
-const adminNavItems = [{ href: "/admin", label: "Resumen" }];
+const adminNavItems = [
+  { href: "/admin", label: "Resumen" },
+  { href: "/admin/productos", label: "Productos" },
+  { href: "/admin/catalogos", label: "Catálogos" },
+];
 
 type AdminLayoutProps = Readonly<{
   children: ReactNode;

@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { Link2, Printer, Smartphone, SquarePen } from "lucide-react";
 
+import { getActiveCatalogsForSeller } from "@/actions/catalogs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShareActions } from "@/components/shared/share-actions";
+import { CatalogPicker } from "@/components/vendedor/catalog-picker";
 import { prisma } from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -44,18 +45,20 @@ export default async function CompartirPage() {
     redirect("/vendedor");
   }
 
+  const catalogs = await getActiveCatalogsForSeller();
+
   return (
     <main className="min-h-screen bg-brand-radial px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-2xl space-y-5 sm:space-y-6">
         <Card className="border-white/70 bg-white/95 shadow-brand">
           <CardHeader className="space-y-1 pb-3 sm:pb-4">
-            <CardTitle className="text-lg text-navy sm:text-xl">Comparte tu catálogo</CardTitle>
+            <CardTitle className="text-lg text-navy sm:text-xl">Elige qué catálogo compartir</CardTitle>
             <CardDescription className="text-xs sm:text-sm">
               Cada compra realizada a través de tu link se atribuye automáticamente a tu cuenta.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ShareActions sellerCode={profile.sellerCode} />
+            <CatalogPicker sellerCode={profile.sellerCode} catalogs={catalogs} />
           </CardContent>
         </Card>
 

@@ -216,6 +216,75 @@ async function main() {
       create: { ...product, slug },
     });
   }
+
+  // ---------------------------------------------------------------------
+  // DEMO CATALOGS (catalog-selection spec)
+  // Dos catalogos de ejemplo que ejercitan el modelo flexible: uno hecho
+  // de categorias completas, otro mezclando una categoria completa con
+  // productos sueltos de otra categoria (para probar la union sin
+  // duplicados). Idempotente via upsert por slug.
+  // ---------------------------------------------------------------------
+
+  const looseProductSlugs = [
+    generateSlug("Bicicleta Mountain Bike Oxford Aro 29"),
+    generateSlug("Carpa de Camping Doite 4 Personas"),
+  ];
+
+  const looseProducts = await prisma.product.findMany({
+    where: { slug: { in: looseProductSlugs } },
+    select: { id: true },
+  });
+
+  const catalogDefs = [
+    {
+      name: "Tecnología y Hogar",
+      description: "Todo lo último en electrónica y electrodomésticos para la casa.",
+      isActive: true,
+      categoryIds: [categoryIds.tecnologia, categoryIds.electrohogar],
+      productIds: [] as string[],
+    },
+    {
+      name: "Ferretería y Aire Libre",
+      description: "Herramientas para el taller, más algunos productos de aire libre destacados.",
+      isActive: true,
+      categoryIds: [categoryIds.herramientasYMaquinarias],
+      productIds: looseProducts.map((product) => product.id),
+    },
+  ];
+
+  for (const catalog of catalogDefs) {
+    const slug = generateSlug(catalog.name);
+
+    const existing = await prisma.catalog.findUnique({ where: { slug }, select: { id: true } });
+
+    if (existing) {
+      await prisma.$transaction([
+        prisma.catalogCategory.deleteMany({ where: { catalogId: existing.id } }),
+        prisma.catalogProduct.deleteMany({ where: { catalogId: existing.id } }),
+        prisma.catalog.update({
+          where: { id: existing.id },
+          data: {
+            name: catalog.name,
+            description: catalog.description,
+            isActive: catalog.isActive,
+            categories: { create: catalog.categoryIds.map((categoryId) => ({ categoryId })) },
+            products: { create: catalog.productIds.map((productId) => ({ productId })) },
+          },
+        }),
+      ]);
+    } else {
+      await prisma.catalog.create({
+        data: {
+          name: catalog.name,
+          slug,
+          description: catalog.description,
+          isActive: catalog.isActive,
+          categories: { create: catalog.categoryIds.map((categoryId) => ({ categoryId })) },
+          products: { create: catalog.productIds.map((productId) => ({ productId })) },
+        },
+      });
+    }
+  }
 }
 
 main()

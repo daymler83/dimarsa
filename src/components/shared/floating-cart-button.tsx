@@ -7,9 +7,10 @@ import { useCart } from "@/hooks/use-cart";
 
 type FloatingCartButtonProps = {
   sellerCode: string;
+  catalogSlug: string;
 };
 
-export function FloatingCartButton({ sellerCode }: FloatingCartButtonProps) {
+export function FloatingCartButton({ sellerCode, catalogSlug }: FloatingCartButtonProps) {
   const { itemCount } = useCart(sellerCode);
 
   if (itemCount === 0) {
@@ -18,7 +19,7 @@ export function FloatingCartButton({ sellerCode }: FloatingCartButtonProps) {
 
   return (
     <Link
-      href={`/c/${sellerCode}/carrito`}
+      href={`/c/${sellerCode}/${catalogSlug}/carrito`}
       className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white shadow-brand transition-transform hover:scale-105"
     >
       <ShoppingCart className="h-6 w-6" />

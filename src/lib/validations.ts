@@ -47,3 +47,13 @@ export const categorySchema = z.object({
 
 export type ProductInput = z.infer<typeof productSchema>;
 export type CategoryInput = z.infer<typeof categorySchema>;
+
+export const catalogSchema = z.object({
+  name: z.string().trim().min(2, "Nombre requerido"),
+  description: z.preprocess(emptyStringToUndefined, z.string().trim().optional()),
+  isActive: z.boolean().default(true),
+  categoryIds: z.array(z.string().uuid()).default([]),
+  productIds: z.array(z.string().uuid()).default([]),
+});
+
+export type CatalogInput = z.infer<typeof catalogSchema>;

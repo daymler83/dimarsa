@@ -5,6 +5,7 @@ import { formatPrice } from "@/lib/utils";
 
 type ProductCardProps = {
   sellerCode: string;
+  catalogSlug: string;
   slug: string;
   name: string;
   price: string;
@@ -14,6 +15,7 @@ type ProductCardProps = {
 
 export function ProductCard({
   sellerCode,
+  catalogSlug,
   slug,
   name,
   price,
@@ -22,7 +24,7 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Link
-      href={`/c/${sellerCode}/${slug}`}
+      href={`/c/${sellerCode}/${catalogSlug}/${slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-cream-dark bg-white/95 shadow-sm transition-shadow hover:shadow-brand"
     >
       <div className="relative aspect-square w-full bg-cream">
