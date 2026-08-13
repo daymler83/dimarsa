@@ -4,6 +4,8 @@ import { getSellerMetrics, getRecommendations } from "@/actions/performance";
 import { PerformanceDashboard } from "@/components/dashboard/performance-dashboard";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 async function calculateFunnel(sellerId: string, start: Date, end: Date) {
   const visits = await prisma.sellerEvent.count({
     where: { sellerId, eventType: "visita", createdAt: { gte: start, lte: end } },

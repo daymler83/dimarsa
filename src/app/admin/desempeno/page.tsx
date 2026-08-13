@@ -12,6 +12,8 @@ import { prisma } from "@/lib/prisma";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPerformancePage() {
   const supabase = createServerSupabaseClient();
   const {
