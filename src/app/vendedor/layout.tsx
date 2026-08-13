@@ -4,8 +4,8 @@ import { Navbar } from "@/components/layout/navbar";
 
 const vendorNavItems = [
   { href: "/vendedor", label: "Resumen" },
-  { href: "/vendedor/desempeno", label: "Mi desempeño" },
   { href: "/vendedor/cotizaciones", label: "Cotizaciones" },
+  { href: "/vendedor/desempeno", label: "Mi desempeño" },
   { href: "/vendedor/compartir", label: "Compartir" },
 ];
 
