@@ -4,10 +4,10 @@ import { Navbar } from "@/components/layout/navbar";
 
 const vendorNavItems = [
   { href: "/vendedor", label: "Resumen" },
+  { href: "/vendedor/compartir", label: "Compartir" },
   { href: "/vendedor/cotizaciones", label: "Cotizaciones" },
   { href: "/vendedor/notas-venta", label: "Notas de venta" },
   { href: "/vendedor/desempeno", label: "Mi desempeño" },
-  { href: "/vendedor/compartir", label: "Compartir" },
 ];
 
 type VendedorLayoutProps = Readonly<{
