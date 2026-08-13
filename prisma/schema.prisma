@@ -22,6 +22,7 @@ model Profile {
   leadsCreated      Lead[]                @relation("LeadSeller")
   followUps         FollowUp[]            @relation("FollowUpSeller")
   quotations        Quotation[]
+  salesNotes        SalesNote[]
   metricsRollup     DailyMetricsRollup[]
 
   @@map("profiles")
@@ -121,6 +122,7 @@ model Order {
   seller          Profile?     @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: SetNull)
   items           OrderItem[]
   commissions     Commission[]
+  salesNotes      SalesNote[]
 
   @@index([sellerId], map: "idx_orders_seller")
   @@index([status], map: "idx_orders_status")
@@ -239,8 +241,9 @@ model Quotation {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  seller  Profile  @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  lead    Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  seller     Profile     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  lead       Lead?       @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  salesNotes SalesNote[]
 
   @@index([sellerId, status], map: "idx_quotations_seller_status")
   @@index([leadId], map: "idx_quotations_lead")
@@ -267,4 +270,35 @@ model DailyMetricsRollup {
   @@unique([sellerId, date], name: "uq_metrics_seller_date")
   @@index([sellerId, date], map: "idx_metrics_seller_date")
   @@map("daily_metrics_rollup")
+}
+
+model SalesNote {
+  id            String   @id @default(uuid()) @db.Uuid
+  sellerId      String   @map("seller_id") @db.Uuid
+  quotationId   String?  @map("quotation_id") @db.Uuid
+  orderId       String?  @map("order_id") @db.Uuid
+
+  customerName  String   @map("customer_name")
+  customerEmail String?  @map("customer_email")
+
+  amount        Decimal  @db.Decimal(10, 2)
+  description   String?
+
+  status        String   @default("registered") // registered, invoiced, paid
+  registeredAt  DateTime @default(now()) @map("registered_at")
+  invoicedAt    DateTime? @map("invoiced_at")
+  paidAt        DateTime? @map("paid_at")
+
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  seller    Profile   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  quotation Quotation? @relation(fields: [quotationId], references: [id], onDelete: SetNull)
+  order     Order?     @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([sellerId, registeredAt], map: "idx_sales_notes_seller_registered")
+  @@index([quotationId], map: "idx_sales_notes_quotation")
+  @@index([orderId], map: "idx_sales_notes_order")
+  @@map("sales_notes")
 }
