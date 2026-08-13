@@ -17,6 +17,10 @@ alter table public.commissions enable row level security;
 alter table public.catalogs enable row level security;
 alter table public.catalog_categories enable row level security;
 alter table public.catalog_products enable row level security;
+alter table public.seller_events enable row level security;
+alter table public.leads enable row level security;
+alter table public.follow_ups enable row level security;
+alter table public.daily_metrics_rollup enable row level security;
 
 drop policy if exists "Users can view own profile" on public.profiles;
 create policy "Users can view own profile"
@@ -63,3 +67,45 @@ create policy "Public can view catalog products"
         and catalogs.is_active = true
     )
   );
+
+-- Sales Performance RLS Policies
+
+drop policy if exists "seller_read_own_events" on public.seller_events;
+create policy "seller_read_own_events"
+  on public.seller_events for select
+  using (seller_id = auth.uid());
+
+drop policy if exists "system_insert_events" on public.seller_events;
+create policy "system_insert_events"
+  on public.seller_events for insert
+  with check (true);
+
+drop policy if exists "seller_read_own_leads" on public.leads;
+create policy "seller_read_own_leads"
+  on public.leads for select
+  using (seller_id = auth.uid());
+
+drop policy if exists "seller_update_own_leads" on public.leads;
+create policy "seller_update_own_leads"
+  on public.leads for update
+  using (seller_id = auth.uid());
+
+drop policy if exists "system_insert_leads" on public.leads;
+create policy "system_insert_leads"
+  on public.leads for insert
+  with check (true);
+
+drop policy if exists "seller_read_own_followups" on public.follow_ups;
+create policy "seller_read_own_followups"
+  on public.follow_ups for select
+  using (seller_id = auth.uid());
+
+drop policy if exists "seller_insert_followups" on public.follow_ups;
+create policy "seller_insert_followups"
+  on public.follow_ups for insert
+  with check (seller_id = auth.uid());
+
+drop policy if exists "seller_read_own_rollup" on public.daily_metrics_rollup;
+create policy "seller_read_own_rollup"
+  on public.daily_metrics_rollup for select
+  using (seller_id = auth.uid());

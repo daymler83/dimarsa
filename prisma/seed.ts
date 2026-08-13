@@ -285,6 +285,112 @@ async function main() {
       });
     }
   }
+
+  // ---------------------------------------------------------------------
+  // SALES PERFORMANCE SEED DATA
+  // Crear eventos, leads, follow-ups y métricas para los vendedores
+  // para poder probar el dashboard de desempeño
+  // ---------------------------------------------------------------------
+
+  const sellers = await prisma.profile.findMany({
+    where: { role: "seller" },
+    select: { id: true },
+  });
+
+  const now = new Date();
+  const weekStart = new Date(now);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Lunes
+  weekStart.setHours(0, 0, 0, 0);
+
+  for (const seller of sellers) {
+    // Crear eventos de visita
+    for (let i = 0; i < 30; i++) {
+      const eventDate = new Date(
+        weekStart.getTime() + (Math.random() * 6 * 24 * 60 * 60 * 1000),
+      );
+      await prisma.sellerEvent.create({
+        data: {
+          sellerId: seller.id,
+          eventType: "visita",
+          payload: { source: "app" },
+          createdAt: eventDate,
+        },
+      });
+    }
+
+    // Crear eventos de add to cart
+    for (let i = 0; i < 12; i++) {
+      const eventDate = new Date(
+        weekStart.getTime() + (Math.random() * 6 * 24 * 60 * 60 * 1000),
+      );
+      await prisma.sellerEvent.create({
+        data: {
+          sellerId: seller.id,
+          eventType: "add_to_cart",
+          payload: { source: "app" },
+          createdAt: eventDate,
+        },
+      });
+    }
+
+    // Crear eventos de checkout
+    for (let i = 0; i < 5; i++) {
+      const eventDate = new Date(
+        weekStart.getTime() + (Math.random() * 6 * 24 * 60 * 60 * 1000),
+      );
+      await prisma.sellerEvent.create({
+        data: {
+          sellerId: seller.id,
+          eventType: "checkout",
+          payload: { source: "app" },
+          createdAt: eventDate,
+        },
+      });
+    }
+
+    // Crear leads
+    for (let i = 0; i < 8; i++) {
+      const phone = `9${Math.floor(Math.random() * 900000000) + 10000000}`;
+      const leadDate = new Date(
+        weekStart.getTime() + (Math.random() * 6 * 24 * 60 * 60 * 1000),
+      );
+      const lead = await prisma.lead.create({
+        data: {
+          sellerId: seller.id,
+          phone,
+          phoneHash: require("crypto").createHash("sha256").update(phone).digest("hex"),
+          phoneValidated: true,
+          customerName: `Cliente ${i}`,
+          catalogSlug: "tecnologia-y-hogar",
+          status: "pending",
+          createdAt: leadDate,
+          updatedAt: leadDate,
+        },
+      });
+
+      // Crear follow-up para algunos leads
+      if (Math.random() > 0.3) {
+        const followUpDate = new Date(
+          leadDate.getTime() + (Math.random() * 24 * 60 * 60 * 1000),
+        );
+        await prisma.followUp.create({
+          data: {
+            leadId: lead.id,
+            sellerId: seller.id,
+            markedAt: followUpDate,
+            notes: `Seguimiento de ${lead.customerName}`,
+            createdAt: followUpDate,
+          },
+        });
+
+        // Marcar lead como responded
+        await prisma.lead.update({
+          where: { id: lead.id },
+          data: { status: "responded" },
+        });
+      }
+    }
+  }
 }
 
 main()

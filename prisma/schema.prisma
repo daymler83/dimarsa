@@ -8,16 +8,20 @@ datasource db {
 }
 
 model Profile {
-  id         String       @id @db.Uuid
-  fullName   String       @map("full_name")
-  phone      String?
-  role       String       @default("seller")
-  sellerCode String?      @unique(map: "idx_profiles_seller_code") @map("seller_code")
-  active     Boolean      @default(true)
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @updatedAt @map("updated_at")
-  orders      Order[]      @relation("SellerOrders")
-  commissions Commission[]
+  id                String                @id @db.Uuid
+  fullName          String                @map("full_name")
+  phone             String?
+  role              String                @default("seller")
+  sellerCode        String?               @unique(map: "idx_profiles_seller_code") @map("seller_code")
+  active            Boolean               @default(true)
+  createdAt         DateTime              @default(now()) @map("created_at")
+  updatedAt         DateTime              @updatedAt @map("updated_at")
+  orders            Order[]               @relation("SellerOrders")
+  commissions       Commission[]
+  sellerEvents      SellerEvent[]
+  leadsCreated      Lead[]                @relation("LeadSeller")
+  followUps         FollowUp[]            @relation("FollowUpSeller")
+  metricsRollup     DailyMetricsRollup[]
 
   @@map("profiles")
 }
@@ -50,6 +54,7 @@ model Product {
   category       Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   orderItems     OrderItem[]
   catalogs       CatalogProduct[]
+  leads          Lead[]
 
   @@index([categoryId], map: "idx_products_category")
   @@index([active], map: "idx_products_active")
@@ -156,4 +161,78 @@ model Commission {
   @@index([status], map: "idx_commissions_status")
   @@index([orderId], map: "idx_commissions_order")
   @@map("commissions")
+}
+
+model SellerEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  eventType String   // "visita", "view_product", "add_to_cart", "share", "lead_created", "follow_up_marked", "checkout"
+  sellerId  String   @map("seller_id") @db.Uuid
+  customerId String?  @map("customer_id") @db.Uuid
+  payload   Json     @default("{}")
+  source    String   @default("app") // "app" | "bot"
+  createdAt DateTime @default(now()) @map("created_at")
+
+  seller    Profile  @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  @@index([sellerId, createdAt], map: "idx_seller_events_seller_created")
+  @@index([eventType], map: "idx_seller_events_type")
+  @@map("seller_events")
+}
+
+model Lead {
+  id            String   @id @default(uuid()) @db.Uuid
+  sellerId      String   @map("seller_id") @db.Uuid
+  customerId    String?  @map("customer_id") @db.Uuid
+  phone         String?
+  phoneHash     String?  @map("phone_hash")
+  phoneValidated Boolean @default(false) @map("phone_validated")
+  customerName  String?  @map("customer_name")
+  productId     String?  @map("product_id") @db.Uuid
+  catalogSlug   String   @map("catalog_slug")
+  status        String   @default("pending") // "pending", "responded", "converted", "expired"
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  seller   Profile  @relation("LeadSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  followUps FollowUp[]
+
+  @@index([sellerId, status], map: "idx_leads_seller_status")
+  @@index([createdAt], map: "idx_leads_created")
+  @@map("leads")
+}
+
+model FollowUp {
+  id        String   @id @default(uuid()) @db.Uuid
+  leadId    String   @map("lead_id") @db.Uuid
+  sellerId  String   @map("seller_id") @db.Uuid
+  markedAt  DateTime @default(now()) @map("marked_at")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lead   Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  seller Profile @relation("FollowUpSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@index([sellerId, markedAt], map: "idx_follow_ups_seller_marked")
+  @@map("follow_ups")
+}
+
+model DailyMetricsRollup {
+  id               String   @id @default(uuid()) @db.Uuid
+  sellerId         String   @map("seller_id") @db.Uuid
+  date             DateTime // Fecha (UTC, inicio de día)
+  conversationRate Decimal  @default(0) @map("conversation_rate") @db.Decimal(5, 2)
+  avgResponseTime  Decimal? @map("avg_response_time") @db.Decimal(8, 2)
+  followUpRate     Decimal  @default(0) @map("follow_up_rate") @db.Decimal(5, 2)
+  postFollowConv   Decimal? @map("post_follow_conv") @db.Decimal(5, 2)
+  performanceScore Decimal  @default(0) @map("performance_score") @db.Decimal(5, 2)
+  visitsCount      Int      @default(0) @map("visits_count")
+  leadsCount       Int      @default(0) @map("leads_count")
+  checkoutsCount   Int      @default(0) @map("checkouts_count")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  seller Profile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@unique([sellerId, date], name: "uq_metrics_seller_date")
+  @@index([sellerId, date], map: "idx_metrics_seller_date")
+  @@map("daily_metrics_rollup")
 }
