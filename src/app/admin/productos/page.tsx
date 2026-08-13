@@ -1,6 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import Link from "next/link";
-
 import { CreateProductDialog } from "@/components/admin/create-product-dialog";
 import { ToggleActiveButton } from "@/components/admin/toggle-active-button";
 import { Badge } from "@/components/ui/badge";

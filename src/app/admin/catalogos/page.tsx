@@ -1,5 +1,6 @@
-import Link from "next/link";
+export const dynamic = "force-dynamic";
 
+import Link from "next/link";
 import { getCatalogsWithCounts } from "@/actions/catalogs";
 import { CreateCatalogDialog } from "@/components/admin/create-catalog-dialog";
 import { DeleteCatalogButton } from "@/components/admin/delete-catalog-button";
