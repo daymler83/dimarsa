@@ -8,10 +8,14 @@ import type { SellerMetrics, Recommendation } from "@/actions/performance";
 
 interface FunnelData {
   visits: number;
-  carts: number;
+  leads: number;
+  quotations: number;
+  approvedQuotations: number;
   checkouts: number;
-  conversionVisitCart: number | string;
-  conversionCartCheckout: number | string;
+  conversionVisitLead: number | string;
+  conversionLeadQuotation: number | string;
+  conversionQuotationApproved: number | string;
+  conversionApprovedCheckout: number | string;
 }
 
 interface PerformanceDashboardProps {

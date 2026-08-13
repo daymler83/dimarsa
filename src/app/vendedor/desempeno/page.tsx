@@ -11,8 +11,16 @@ async function calculateFunnel(sellerId: string, start: Date, end: Date) {
     where: { sellerId, eventType: "visita", createdAt: { gte: start, lte: end } },
   });
 
-  const carts = await prisma.sellerEvent.count({
-    where: { sellerId, eventType: "add_to_cart", createdAt: { gte: start, lte: end } },
+  const leads = await prisma.lead.count({
+    where: { sellerId, createdAt: { gte: start, lte: end } },
+  });
+
+  const quotations = await prisma.quotation.count({
+    where: { sellerId, createdAt: { gte: start, lte: end } },
+  });
+
+  const approvedQuotations = await prisma.quotation.count({
+    where: { sellerId, createdAt: { gte: start, lte: end }, status: "approved" },
   });
 
   const checkouts = await prisma.sellerEvent.count({
@@ -21,10 +29,14 @@ async function calculateFunnel(sellerId: string, start: Date, end: Date) {
 
   return {
     visits,
-    carts,
+    leads,
+    quotations,
+    approvedQuotations,
     checkouts,
-    conversionVisitCart: visits > 0 ? ((carts / visits) * 100).toFixed(1) : 0,
-    conversionCartCheckout: carts > 0 ? ((checkouts / carts) * 100).toFixed(1) : 0,
+    conversionVisitLead: visits > 0 ? ((leads / visits) * 100).toFixed(1) : 0,
+    conversionLeadQuotation: leads > 0 ? ((quotations / leads) * 100).toFixed(1) : 0,
+    conversionQuotationApproved: quotations > 0 ? ((approvedQuotations / quotations) * 100).toFixed(1) : 0,
+    conversionApprovedCheckout: approvedQuotations > 0 ? ((checkouts / approvedQuotations) * 100).toFixed(1) : 0,
   };
 }
 

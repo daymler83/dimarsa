@@ -21,6 +21,7 @@ model Profile {
   sellerEvents      SellerEvent[]
   leadsCreated      Lead[]                @relation("LeadSeller")
   followUps         FollowUp[]            @relation("FollowUpSeller")
+  quotations        Quotation[]
   metricsRollup     DailyMetricsRollup[]
 
   @@map("profiles")
@@ -192,9 +193,10 @@ model Lead {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  seller   Profile  @relation("LeadSeller", fields: [sellerId], references: [id], onDelete: Cascade)
-  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-  followUps FollowUp[]
+  seller      Profile    @relation("LeadSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
+  followUps   FollowUp[]
+  quotations  Quotation[]
 
   @@index([sellerId, status], map: "idx_leads_seller_status")
   @@index([createdAt], map: "idx_leads_created")
@@ -214,6 +216,36 @@ model FollowUp {
 
   @@index([sellerId, markedAt], map: "idx_follow_ups_seller_marked")
   @@map("follow_ups")
+}
+
+model Quotation {
+  id            String   @id @default(uuid()) @db.Uuid
+  sellerId      String   @map("seller_id") @db.Uuid
+  leadId        String?  @map("lead_id") @db.Uuid
+  customerName  String   @map("customer_name")
+  customerEmail String?  @map("customer_email")
+  customerPhone String?  @map("customer_phone")
+
+  amount        Decimal  @db.Decimal(10, 2)
+  description   String?
+
+  status        String   @default("draft") // draft, sent, approved, rejected, expired
+  sentAt        DateTime? @map("sent_at")
+  approvedAt    DateTime? @map("approved_at")
+
+  expiresAt     DateTime? @map("expires_at")
+  notes         String?
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  seller  Profile  @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  lead    Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  @@index([sellerId, status], map: "idx_quotations_seller_status")
+  @@index([leadId], map: "idx_quotations_lead")
+  @@index([createdAt], map: "idx_quotations_created")
+  @@map("quotations")
 }
 
 model DailyMetricsRollup {

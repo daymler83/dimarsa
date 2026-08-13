@@ -20,6 +20,7 @@ alter table public.catalog_products enable row level security;
 alter table public.seller_events enable row level security;
 alter table public.leads enable row level security;
 alter table public.follow_ups enable row level security;
+alter table public.quotations enable row level security;
 alter table public.daily_metrics_rollup enable row level security;
 
 drop policy if exists "Users can view own profile" on public.profiles;
@@ -108,4 +109,21 @@ create policy "seller_insert_followups"
 drop policy if exists "seller_read_own_rollup" on public.daily_metrics_rollup;
 create policy "seller_read_own_rollup"
   on public.daily_metrics_rollup for select
+  using (seller_id = auth.uid());
+
+-- Quotations RLS Policies
+
+drop policy if exists "seller_read_own_quotations" on public.quotations;
+create policy "seller_read_own_quotations"
+  on public.quotations for select
+  using (seller_id = auth.uid());
+
+drop policy if exists "seller_insert_quotations" on public.quotations;
+create policy "seller_insert_quotations"
+  on public.quotations for insert
+  with check (seller_id = auth.uid());
+
+drop policy if exists "seller_update_own_quotations" on public.quotations;
+create policy "seller_update_own_quotations"
+  on public.quotations for update
   using (seller_id = auth.uid());

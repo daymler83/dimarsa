@@ -156,6 +156,11 @@ export interface SellerMetrics {
   visitsCount: number;
   leadsCount: number;
   followUpCount: number;
+  leadToQuotationRate: number;
+  quotationApprovalRate: number;
+  salesCycleTime: number;
+  avgTicket: number;
+  openPipeline: number;
 }
 
 export async function getSellerMetrics(
@@ -241,13 +246,111 @@ export async function getSellerMetrics(
 
   const postFollowConversion = followUpCount > 0 ? (postFollowBuyers.length / followUpCount) * 100 : 0;
 
-  // Score 0–100
+  // ============ Pipeline Metrics ============
+
+  // 1. Lead to Quotation Rate
+  const totalLeads = await prisma.lead.count({
+    where: { sellerId, createdAt: { gte: weekStartDate, lte: weekEndDate } },
+  });
+
+  const leadsWithQuotations = await prisma.lead.count({
+    where: {
+      sellerId,
+      createdAt: { gte: weekStartDate, lte: weekEndDate },
+      quotations: { some: {} },
+    },
+  });
+
+  const leadToQuotationRate = totalLeads > 0 ? (leadsWithQuotations / totalLeads) * 100 : 0;
+
+  // 2. Quotation Approval Rate
+  const sentQuotations = await prisma.quotation.count({
+    where: {
+      sellerId,
+      createdAt: { gte: weekStartDate, lte: weekEndDate },
+      status: "sent",
+    },
+  });
+
+  const approvedQuotations = await prisma.quotation.count({
+    where: {
+      sellerId,
+      createdAt: { gte: weekStartDate, lte: weekEndDate },
+      status: "approved",
+    },
+  });
+
+  const quotationApprovalRate =
+    sentQuotations > 0 ? (approvedQuotations / sentQuotations) * 100 : 0;
+
+  // 3. Sales Cycle Time (median days from lead to quotation approval)
+  const leadQuotationPairs = await prisma.quotation.findMany({
+    where: {
+      sellerId,
+      createdAt: { gte: weekStartDate, lte: weekEndDate },
+      status: "approved",
+      leadId: { not: null },
+    },
+    include: { lead: true },
+  });
+
+  const cycleTimes = leadQuotationPairs
+    .map((q) => {
+      if (!q.lead) return null;
+      const days = (q.approvedAt!.getTime() - q.lead.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+      return days;
+    })
+    .filter((d) => d !== null) as number[];
+
+  const salesCycleTime =
+    cycleTimes.length > 0
+      ? cycleTimes.sort((a, b) => a - b)[Math.floor(cycleTimes.length / 2)]
+      : 0;
+
+  // 4. Average Ticket (avg amount of approved quotations)
+  const approvedQuotationAmounts = await prisma.quotation.findMany({
+    where: {
+      sellerId,
+      createdAt: { gte: weekStartDate, lte: weekEndDate },
+      status: "approved",
+    },
+    select: { amount: true },
+  });
+
+  const avgTicket =
+    approvedQuotationAmounts.length > 0
+      ? approvedQuotationAmounts.reduce((sum, q) => sum + q.amount.toNumber(), 0) /
+        approvedQuotationAmounts.length
+      : 0;
+
+  // 5. Open Pipeline (pending quotations)
+  const openPipeline = await prisma.quotation.count({
+    where: {
+      sellerId,
+      status: { in: ["draft", "sent"] },
+    },
+  });
+
+  // ============ New Sales Performance Score (0-100) ============
+  // Score =
+  //   0.20 × tasa_lead_to_quotation (normalizada) +
+  //   0.25 × tasa_quotation_approval (normalizada) +
+  //   0.15 × tiempo_ciclo (inverso: más rápido = mejor) +
+  //   0.15 × ticket_promedio (normalizado vs histórico) +
+  //   0.25 × conversión_venta (existente, mejora por pipeline cerrado)
+
+  const normalizedLeadToQuotation = Math.min(100, (leadToQuotationRate / 100) * 100);
+  const normalizedQuotationApproval = quotationApprovalRate; // Already 0-100
+  const normalizedSalesCycle = salesCycleTime > 0 ? Math.min(100, (100 / (salesCycleTime + 1)) * 10) : 100;
+  const normalizedTicket = avgTicket > 0 ? Math.min(100, (avgTicket / 1000) * 100) : 0;
+  const normalizedConversion = conversionRate;
+
   const performanceScore =
-    0.25 * (conversionRate / 10) + // Normalizar a 100
-    0.15 * (Math.min(100, medianResponseTime > 0 ? (100 / medianResponseTime) * 2 : 0)) +
-    0.2 * followUpRate +
-    0.25 * (postFollowConversion / 50) + // Normalizar
-    0.15 * (Math.min(100, (leadsCount / 50) * 100)); // Volumen
+    0.2 * (normalizedLeadToQuotation / 100) * 100 +
+    0.25 * (normalizedQuotationApproval / 100) * 100 +
+    0.15 * (normalizedSalesCycle / 100) * 100 +
+    0.15 * (normalizedTicket / 100) * 100 +
+    0.25 * (normalizedConversion / 100) * 100;
 
   // Semáforo
   const performanceLevel: "green" | "amber" | "red" =
@@ -263,6 +366,11 @@ export async function getSellerMetrics(
     visitsCount: visitors.length,
     leadsCount,
     followUpCount,
+    leadToQuotationRate: Math.round(leadToQuotationRate * 10) / 10,
+    quotationApprovalRate: Math.round(quotationApprovalRate * 10) / 10,
+    salesCycleTime: Math.round(salesCycleTime * 10) / 10,
+    avgTicket: Math.round(avgTicket * 100) / 100,
+    openPipeline,
   };
 }
 
